@@ -11,11 +11,10 @@ export default {
 	computed: {
 		gridItemAttr() {
 			return {
-				"data-gs-x": this.item.x,
-				"data-gs-y": this.item.y,
-				"data-gs-width": this.item.w,
-				"data-gs-height": this.item.h,
-				"data-gs-id": this.item.id,
+				"gs-x": this.item.x,
+				"gs-y": this.item.y,
+				"gs-w": this.item.w,
+				"gs-h": this.item.h,
 			};
 		},
 	},
@@ -29,7 +28,14 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.grid-stack-item {
+
+.grid-stack-item-content {
 	border: 1px solid black;
 }
+
+@import '/node_modules/gridstack/dist/gridstack.min.css';
+@import '/node_modules/gridstack/dist/gridstack-extra.css';
+
+
+
 </style>
