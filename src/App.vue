@@ -1,7 +1,11 @@
 <template>
 	<div>
 		<div>
+			{{layout}}
+		</div>
+		<div>
 			<button @click="addItem">Add item</button>
+			<button @click="save">Save</button>
 		</div>
 		<gridstack-layout>
 			<gridstack-item v-for="(item, index) in layout" :key="index" :item="item">
@@ -44,17 +48,15 @@ export default {
 	mounted() {
 		const self = this;
 		self.grid = GridStack.initAll({ float: true, cellHeight: '70px', minRow: 3, margin: 10, column: 11, acceptWidgets: true });
+		self.grid.forEach(grid => {
+			grid.on('dragstart resize dragend', (event, items) => { console.log(event); items;	 })
+		})
 	},
 	data() {
 		return {
+			gridData: null,
 			layout: [
-				// {
-				// 	x: 0,
-				// 	y: 0,
-				// 	w: 2,
-				// 	h: 2,
-				// 	component: 'a'
-				// },
+
 				{
 					id: 1,
 					x: 1,
@@ -85,29 +87,37 @@ export default {
 					w: 12,
 					h: 2,
 				},
-				// {
-				// 	section: [{
-				// 		x: 1,
-				// 		y: 2,
-				// 		w: 2,
-				// 		h: 2,
-				// 		component: 'c'
-				// 	}, {
-				// 		x: 0,
-				// 		y: 0,
-				// 		w: 2,
-				// 		h: 2,
-				// 		component: 'a'
-				// 	}],
-				// 	x: 1,
-				// 	y: 2,
-				// 	w: 12,
-				// 	h: 2,
-				// },
+				{
+					section: [{
+						id: 3,
+						x: 1,
+						y: 2,
+						w: 2,
+						h: 2,
+						component: 'c'
+					}, {
+						id: 4,
+						x: 0,
+						y: 0,
+						w: 2,
+						h: 2,
+						component: 'a'
+					}],
+					id: 2,
+					x: 1,
+					y: 2,
+					w: 12,
+					h: 2,
+				}
 			],
 		};
 	},
 	methods: {
+		save() {
+			// this.gridData = this.grid[0].save();
+			// console.log(this.gridData)
+			this.layout[0].w = 12
+		},
 		addItem() {
 			const newItemData = {
 				x: 0,
@@ -115,14 +125,14 @@ export default {
 				w: 3,
 				h: 4,
 				component: 'a',
-				id: 'newItem'
+				id: 'newGridItem'
 			};
 			this.layout.push(newItemData);
 			//this.layout.push(newItemData);
 			const self = this
 			Vue.nextTick(() => {
-				self.grid[MASTER_GRID_INDEX].makeWidget('#newItem');
-				delete self.layout[self.layout.length - 1].id
+				self.grid[MASTER_GRID_INDEX].makeWidget('#newGridItem');
+				// delete self.layout[self.layout.length - 1].id
 			});
 
 		},
@@ -131,4 +141,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
+button {
+	display: block;
+}
 </style>

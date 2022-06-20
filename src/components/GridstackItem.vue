@@ -1,6 +1,6 @@
 <template>
 	<div class="grid-stack-item" v-bind="gridItemAttr">
-		<div class="grid-stack-item-content">
+		<div :class="gridContentClass">
 			<slot></slot>
 		</div>
 	</div>
@@ -9,6 +9,12 @@
 <script>
 export default {
 	computed: {
+		gridContentClass() {
+			return {
+				'grid-stack-item-content': true,
+				'grid-stack-nested-item': !!this.item.section
+			}
+		},
 		gridItemAttr() {
 			let attr = {
 				"gs-x": this.item.x,
@@ -46,9 +52,12 @@ export default {
 	border: 10px dashed red;
 }
 
+
 @import '/node_modules/gridstack/dist/gridstack.min.css';
 @import '/node_modules/gridstack/dist/gridstack-extra.css';
 
 
-
+.grid-stack-nested-item {
+	background-color: rgb(203, 123, 123);
+}
 </style>
