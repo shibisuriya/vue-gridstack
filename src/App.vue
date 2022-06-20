@@ -3,7 +3,7 @@
 		<gridstack-layout>
 			<gridstack-item v-for="(item, index) in layout" :key="index" :item="item">
 				<gridstack-layout v-if="item.hasOwnProperty('section')">
-					<gridstack-item v-for="(item2, index2) in item.section" :item="item" :key="index2">
+					<gridstack-item v-for="(item2, index2) in item.section" :item="item2" :key="index2">
 						<ComponentA v-if="item2.component == 'a'" />
 						<ComponentB v-if="item2.component == 'b'" />
 						<ComponentC v-if="item2.component == 'c'" />
@@ -45,14 +45,15 @@ export default {
 	data() {
 		return {
 			layout: [
+				// {
+				// 	x: 0,
+				// 	y: 0,
+				// 	w: 2,
+				// 	h: 2,
+				// 	component: 'a'
+				// },
 				{
-					x: 0,
-					y: 0,
-					w: 2,
-					h: 2,
-					component: 'a'
-				},
-				{
+					id: 1,
 					x: 1,
 					y: 2,
 					w: 2,
@@ -61,42 +62,45 @@ export default {
 				},
 				{
 					section: [{
+						id: 3,
 						x: 1,
 						y: 2,
 						w: 2,
 						h: 2,
 						component: 'c'
 					}, {
+						id: 4,
 						x: 0,
 						y: 0,
 						w: 2,
 						h: 2,
 						component: 'a'
 					}],
+					id: 2,
 					x: 1,
 					y: 2,
-					w: 2,
+					w: 12,
 					h: 2,
 				},
-				{
-					section: [{
-						x: 1,
-						y: 2,
-						w: 2,
-						h: 2,
-						component: 'c'
-					}, {
-						x: 0,
-						y: 0,
-						w: 2,
-						h: 2,
-						component: 'a'
-					}],
-					x: 1,
-					y: 2,
-					w: 2,
-					h: 2,
-				},
+				// {
+				// 	section: [{
+				// 		x: 1,
+				// 		y: 2,
+				// 		w: 2,
+				// 		h: 2,
+				// 		component: 'c'
+				// 	}, {
+				// 		x: 0,
+				// 		y: 0,
+				// 		w: 2,
+				// 		h: 2,
+				// 		component: 'a'
+				// 	}],
+				// 	x: 1,
+				// 	y: 2,
+				// 	w: 12,
+				// 	h: 2,
+				// },
 			],
 		};
 	},
@@ -115,5 +119,5 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
 </style>
