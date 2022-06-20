@@ -20,6 +20,11 @@ export default {
 				attr['gs-max-w'] = 12
 				attr['gs-min-w'] = 12
 			}
+			// The id attribute is used while adding a new widget (Grid item).
+			// For more information refer gridstack's makeWidget().
+			if (this.item.id) {
+				attr['id'] = this.item.id
+			}
 			return attr;
 		},
 	},

@@ -1,5 +1,8 @@
 <template>
 	<div>
+		<div>
+			<button @click="addItem">Add item</button>
+		</div>
 		<gridstack-layout>
 			<gridstack-item v-for="(item, index) in layout" :key="index" :item="item">
 				<gridstack-layout v-if="item.hasOwnProperty('section')">
@@ -24,11 +27,11 @@ import GridstackLayout from "./components/GridstackLayout.vue";
 import GridstackItem from "./components/GridstackItem.vue";
 import GridStack from '/node_modules/gridstack/dist/gridstack-h5.js'
 
-
+import Vue from "vue";
 import ComponentA from './widgets/ComponentA.vue';
 import ComponentB from './widgets/ComponentB.vue'
 import ComponentC from './widgets/ComponentC.vue';
-
+const MASTER_GRID_INDEX = 0; // Master grid is the parent (.grid-stack) of all .grid-stack(s), this component supports nested grids.
 export default {
 	components: {
 		GridstackLayout,
@@ -111,9 +114,17 @@ export default {
 				y: 0,
 				w: 3,
 				h: 4,
+				component: 'a',
+				id: 'newItem'
 			};
 			this.layout.push(newItemData);
 			//this.layout.push(newItemData);
+			const self = this
+			Vue.nextTick(() => {
+				self.grid[MASTER_GRID_INDEX].makeWidget('#newItem');
+				delete self.layout[self.layout.length - 1].id
+			});
+
 		},
 	},
 };
