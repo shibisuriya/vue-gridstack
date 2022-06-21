@@ -21,11 +21,13 @@ export default {
 				"gs-y": this.item.y,
 				"gs-w": this.item.w,
 				"gs-h": this.item.h,
+				"gs-removable": true,
 			}
-			if (this.item.section) {
-				attr['gs-max-w'] = 12
-				attr['gs-min-w'] = 12
-			}
+			// if (this.item.section) {
+			// 	attr['gs-max-w'] = 12
+			// 	attr['gs-min-w'] = 12
+			// 	// attr['gs-no-resize'] = "true"
+			// }
 			// The id attribute is used while adding a new widget (Grid item).
 			// For more information refer gridstack's makeWidget().
 			if (this.item.id) {

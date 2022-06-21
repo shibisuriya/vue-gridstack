@@ -1,25 +1,28 @@
 <template>
 	<div>
 		<div>
-			{{layout}}
+			{{ layout }}
 		</div>
 		<div>
 			<button @click="addItem">Add item</button>
 			<button @click="save">Save</button>
+			<button @click="resizeElement">Resize Element</button>
 		</div>
 		<gridstack-layout>
-			<gridstack-item v-for="(item, index) in layout" :key="index" :item="item">
-				<gridstack-layout v-if="item.hasOwnProperty('section')">
-					<gridstack-item v-for="(item2, index2) in item.section" :item="item2" :key="index2">
-						<ComponentA v-if="item2.component == 'a'" />
-						<ComponentB v-if="item2.component == 'b'" />
-						<ComponentC v-if="item2.component == 'c'" />
+			<gridstack-item v-for="(gridItem, index) in layout" :key="index" :item="gridItem"
+				:id="index + '_' + String(index)">
+				<gridstack-layout v-if="gridItem.hasOwnProperty('section')">
+					<gridstack-item v-for="(innerGridItem, innerIndex) in gridItem.section" :item="innerGridItem"
+						:key="innerIndex">
+						<ComponentA v-if="innerGridItem.component == 'a'" />
+						<ComponentB v-if="innerGridItem.component == 'b'" />
+						<ComponentC v-if="innerGridItem.component == 'c'" />
 					</gridstack-item>
 				</gridstack-layout>
 				<template v-else>
-					<ComponentA v-if="item.component == 'a'" />
-					<ComponentB v-if="item.component == 'b'" />
-					<ComponentC v-if="item.component == 'c'" />
+					<ComponentA v-if="gridItem.component == 'a'" />
+					<ComponentB v-if="gridItem.component == 'b'" />
+					<ComponentC v-if="gridItem.component == 'c'" />
 				</template>
 			</gridstack-item>
 		</gridstack-layout>
@@ -47,10 +50,37 @@ export default {
 	},
 	mounted() {
 		const self = this;
-		self.grid = GridStack.initAll({ float: true, cellHeight: '70px', minRow: 3, margin: 10, column: 11, acceptWidgets: true });
-		self.grid.forEach(grid => {
-			grid.on('dragstart resize dragend', (event, items) => { console.log(event); items;	 })
+		self.grid = GridStack.initAll({ float: false, cellHeight: '70px', minRow: 2, margin: 10, column: 12, acceptWidgets: true, scroll: false });
+		self.grid.forEach(g => {
+			g.on('dropped dragstop resize', () => {
+				const sections = self.grid[MASTER_GRID_INDEX].engine.nodes
+				sections.forEach(section => {
+					if (section.subGrid) {
+						const subGrid = section.subGrid.engine.nodes;
+						console.log('This is a section', ' -> ', Math.max(...subGrid.map(o => o.y + o.h)))
+						const maxHeight = Math.max(...subGrid.map(o => o.y + o.h))
+						console.log(section)
+						self.grid[MASTER_GRID_INDEX].update(section.el, { h: maxHeight + 1})
+						return;
+					} else {
+						console.log('This is not a section')
+					}
+				})
+				//console.log(sections)
+				// sections.forEach((section) => {
+				// 	//console.log(section)
+				// 	// const element = section.el
+				// 	const gridItems = section.grid.engine.nodes
+				// 	//console.log(Math.max(...gridItems.map(o => o.y + o.h)))
+				// 	console.log(gridItems)
+				// })
+				//console.log(sections)
+			})
 		})
+		// setTimeout(() => {
+		// 	//self.grid.forEach(g => g.cellHeight(10))
+		// 	self.grid[0].cellHeight(10)
+		// }, 5000)
 	},
 	data() {
 		return {
@@ -58,7 +88,7 @@ export default {
 			layout: [
 
 				{
-					id: 1,
+					id: 'a',
 					x: 1,
 					y: 2,
 					w: 2,
@@ -67,21 +97,14 @@ export default {
 				},
 				{
 					section: [{
-						id: 3,
+						id: 'b',
 						x: 1,
 						y: 2,
 						w: 2,
 						h: 2,
 						component: 'c'
-					}, {
-						id: 4,
-						x: 0,
-						y: 0,
-						w: 2,
-						h: 2,
-						component: 'a'
 					}],
-					id: 2,
+					id: 'd',
 					x: 1,
 					y: 2,
 					w: 12,
@@ -89,26 +112,19 @@ export default {
 				},
 				{
 					section: [{
-						id: 3,
+						id: 'b',
 						x: 1,
 						y: 2,
 						w: 2,
 						h: 2,
 						component: 'c'
-					}, {
-						id: 4,
-						x: 0,
-						y: 0,
-						w: 2,
-						h: 2,
-						component: 'a'
 					}],
-					id: 2,
+					id: 'd',
 					x: 1,
 					y: 2,
 					w: 12,
 					h: 2,
-				}
+				},
 			],
 		};
 	},
@@ -117,6 +133,11 @@ export default {
 			// this.gridData = this.grid[0].save();
 			// console.log(this.gridData)
 			this.layout[0].w = 12
+		},
+		resizeElement() {
+			// this.layout[0].x = 'auto'
+			// this.layout[0].w = 12;
+			this.grid[0].update('#a', { w: 12 })
 		},
 		addItem() {
 			const newItemData = {
