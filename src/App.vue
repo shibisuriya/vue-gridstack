@@ -39,6 +39,7 @@ import ComponentA from './widgets/ComponentA.vue';
 import ComponentB from './widgets/ComponentB.vue'
 import ComponentC from './widgets/ComponentC.vue';
 const MASTER_GRID_INDEX = 0; // Master grid is the parent (.grid-stack) of all .grid-stack(s), this component supports nested grids.
+const MIN_ROW = 3;
 export default {
 	components: {
 		GridstackLayout,
@@ -50,7 +51,7 @@ export default {
 	},
 	mounted() {
 		const self = this;
-		self.grid = GridStack.initAll({ float: false, cellHeight: '70px', minRow: 2, margin: 10, column: 12, acceptWidgets: true, scroll: false });
+		self.grid = GridStack.initAll({ float: false, cellHeight: '70px', minRow: MIN_ROW, margin: 10, column: 12, acceptWidgets: true, scroll: false });
 		self.grid.forEach(g => {
 			g.on('dropped dragstop resize', () => {
 				const sections = self.grid[MASTER_GRID_INDEX].engine.nodes
@@ -59,13 +60,22 @@ export default {
 						const subGrid = section.subGrid.engine.nodes;
 						console.log('This is a section', ' -> ', Math.max(...subGrid.map(o => o.y + o.h)))
 						const maxHeight = Math.max(...subGrid.map(o => o.y + o.h))
-						console.log(section)
-						self.grid[MASTER_GRID_INDEX].update(section.el, { h: maxHeight + 1})
+						//console.log(section)
+						console.log(maxHeight)
+						if (subGrid.length == 0) {
+							self.grid[MASTER_GRID_INDEX].update(section.el, { h: MIN_ROW })
+						} else {
+							self.grid[MASTER_GRID_INDEX].update(section.el, { h: maxHeight + 1 })
+						}
 						return;
 					} else {
 						console.log('This is not a section')
 					}
 				})
+				// self.grid[MASTER_GRID_INDEX].update(el, { minRow: 5 + 1 })
+				// self.grid[MASTER_GRID_INDEX].batchUpdate()
+				// self.grid[MASTER_GRID_INDEX].commit()
+
 				//console.log(sections)
 				// sections.forEach((section) => {
 				// 	//console.log(section)
