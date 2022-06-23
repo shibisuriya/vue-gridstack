@@ -1,6 +1,7 @@
 <template>
 	<div class="grid-stack-item" v-bind="gridItemAttr">
 		<div :class="gridContentClass">
+			<div style="display:none" id="grid-data">{{ item }}</div>
 			<slot></slot>
 		</div>
 	</div>
@@ -23,15 +24,18 @@ export default {
 				"gs-h": this.item.h,
 				"gs-removable": true,
 			}
+			if (this.id) {
+				attr["id"] = this.id
+			}
 			if (this.item.section) {
 				attr['gs-max-w'] = 12
 				attr['gs-min-w'] = 12
-				attr['gs-no-resize'] = "true"
+				// attr['gs-no-resize'] = "true"
 			}
 			// The id attribute is used while adding a new widget (Grid item).
 			// For more information refer gridstack's makeWidget().
-			if (this.item.id) {
-				attr['id'] = this.item.id
+			if (this.id) {
+				attr['gs-id'] = this.id
 			}
 			return attr;
 		},
@@ -41,15 +45,18 @@ export default {
 			required: true,
 			type: Object,
 		},
+		id: {
+			type: String
+		}
 	},
 };
 </script>
 
 <style lang="css" scoped>
-
 .grid-stack-item-content {
 	border: 1px solid black;
 }
+
 .grid-stack-placeholder {
 	border: 10px dashed red;
 }
