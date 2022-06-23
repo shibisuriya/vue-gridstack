@@ -21,7 +21,7 @@
 		<gridstack-layout @save="saveGrid" ref="gridstackLayout">
 			<gridstack-item v-for="(section, index) in layout" :key="index" :item="section"
 				@removeWidget="removeWidget">
-				<gridstack-section v-if="section.hasOwnProperty('section')">
+				<gridstack-section v-if="section.hasOwnProperty('section')" @shrink="shrink">
 					<gridstack-item v-for="(child, childIndex) in section.section" :item="child" :key="childIndex"
 						@removeWidget="removeWidget">
 						<ComponentA v-if="child.component == 'a'" />
@@ -57,6 +57,9 @@ export default {
 		ComponentC
 	},
 	methods: {
+		shrink(el) {
+			this.$refs['gridstackLayout'].shrink(el)
+		},
 		saveGrid(gridData) {
 			this.gridData = gridData
 			console.log(gridData)

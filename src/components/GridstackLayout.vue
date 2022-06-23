@@ -6,11 +6,22 @@
 
 <script>
 import GridStack from '/node_modules/gridstack/dist/gridstack-h5.js'
+import { eventBus } from '../main'
 import Vue from 'vue'
 const MIN_ROW = 3;
 const MASTER_GRID_INDEX = 0; // Master grid is the parent (.grid-stack) of all .grid-stack(s), this component supports nested grids.
 export default {
 	methods: {
+		subscribeToEvents() {
+			const self = this
+			eventBus.$on('shrink', (el, collapsed) => {
+				if (collapsed) {
+					self.grid[MASTER_GRID_INDEX].update(el, { h: 1 })
+				} else {
+					self.grid[MASTER_GRID_INDEX].update(el, { h: 8 })
+				}
+			})
+		},
 		removeWidget(el) {
 			//if(el.getAttribute())
 			// this.grid.forEach((g, index) => {
@@ -74,6 +85,10 @@ export default {
 			});
 
 		},
+
+	},
+	created() {
+		this.subscribeToEvents()
 	},
 	mounted() {
 		const self = this;
