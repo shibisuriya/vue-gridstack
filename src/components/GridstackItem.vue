@@ -1,7 +1,7 @@
 <template>
 	<div class="grid-stack-item" v-bind="gridItemAttr">
 		<div :class="gridContentClass">
-			<div style="display:none" id="grid-data">{{ item }}</div>
+			<div style="display:none" id="gridstack-data">{{ getComponent }}</div>
 			<slot></slot>
 		</div>
 	</div>
@@ -16,6 +16,9 @@ export default {
 				'grid-stack-nested-item': !!this.item.section
 			}
 		},
+		getComponent() {
+			return { component: this.item.component, otherData : '... Data which has been passed as props to grid-stack-item ... ' }
+		},
 		gridItemAttr() {
 			let attr = {
 				"gs-x": this.item.x,
@@ -24,9 +27,6 @@ export default {
 				"gs-h": this.item.h,
 				"gs-removable": true,
 			}
-			if (this.id) {
-				attr["id"] = this.id
-			}
 			if (this.item.section) {
 				attr['gs-max-w'] = 12
 				attr['gs-min-w'] = 12
@@ -34,9 +34,7 @@ export default {
 			}
 			// The id attribute is used while adding a new widget (Grid item).
 			// For more information refer gridstack's makeWidget().
-			if (this.id) {
-				attr['gs-id'] = this.id
-			}
+	
 			return attr;
 		},
 	},
@@ -45,9 +43,7 @@ export default {
 			required: true,
 			type: Object,
 		},
-		id: {
-			type: String
-		}
+	
 	},
 };
 </script>

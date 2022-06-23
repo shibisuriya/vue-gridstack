@@ -5,10 +5,15 @@
 			{{ layoutCopy }}
 			<button @click="() => { this.$refs['gridstackLayout'].save() }">Save</button>
 		</div>
+		<div>
+			{{gridData}}
+		</div>
+		<!-- Modifying the props from within a child component is a bad practice, if you want to get the current state of the grids,
+		use @save event. The props passed into the gridstack-layout won't sync automatically (This method is followed in vue-grid-stack). -->
 		<gridstack-layout @save="saveGrid" ref="gridstackLayout">
 			<gridstack-item v-for="(section, index) in layout" :key="index" :item="section">
 				<gridstack-section v-if="section.hasOwnProperty('section')">
-					<gridstack-item v-for="(child, childIndex) in section.section" :item="section" :key="childIndex">
+					<gridstack-item v-for="(child, childIndex) in section.section" :item="child" :key="childIndex">
 						<ComponentA v-if="child.component == 'a'" />
 						<ComponentB v-if="child.component == 'b'" />
 						<ComponentC v-if="child.component == 'c'" />
@@ -43,6 +48,7 @@ export default {
 	},
 	methods: {
 		saveGrid(gridData) {
+			this.gridData = gridData
 			console.log(gridData)
 		}
 	},
