@@ -11,6 +11,27 @@ const MIN_ROW = 3;
 const MASTER_GRID_INDEX = 0; // Master grid is the parent (.grid-stack) of all .grid-stack(s), this component supports nested grids.
 export default {
 	methods: {
+		removeWidget(el) {
+			//if(el.getAttribute())
+			// this.grid.forEach((g, index) => {
+			// 	const isSection = el.getAttribute('class').includes('grid-stack-nested')
+			// 	if (isSection) {
+			// 		const a = g.getGridItems()
+			// 		if (a.includes(el)) {
+			// 			index;
+			// 			console.log(a)
+			// 		}
+			// 	}
+			// })
+			this.grid.forEach(g => g.removeWidget(el))
+
+			// const isSection = el.getAttribute('class').includes('grid-stack-nested')
+			// if (isSection) {
+			// 	this.grid[MASTER_GRID_INDEX].destroy(el)
+			// } else {
+			// }
+			// //this.grid.forEach(g => g.removeWidget(el))
+		},
 		save() {
 			const self = this
 			let gridData = this.grid[MASTER_GRID_INDEX].save()

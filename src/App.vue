@@ -2,18 +2,28 @@
 <template>
 	<div>
 		<div>
-			{{ layoutCopy }}
 			<button @click="() => { this.$refs['gridstackLayout'].save() }">Save</button>
+			<div>
+				<h1>Add new widget</h1>
+				<select></select>
+				<!-- <button @click="this.$refs['grid']"></button> -->
+			</div>
 		</div>
 		<div>
 			{{gridData}}
 		</div>
+		<div>
+			<button>Add section</button>
+			<button>Add widget</button>
+		</div>
 		<!-- Modifying the props from within a child component is a bad practice, if you want to get the current state of the grids,
 		use @save event. The props passed into the gridstack-layout won't sync automatically (This method is followed in vue-grid-stack). -->
 		<gridstack-layout @save="saveGrid" ref="gridstackLayout">
-			<gridstack-item v-for="(section, index) in layout" :key="index" :item="section">
+			<gridstack-item v-for="(section, index) in layout" :key="index" :item="section"
+				@removeWidget="removeWidget">
 				<gridstack-section v-if="section.hasOwnProperty('section')">
-					<gridstack-item v-for="(child, childIndex) in section.section" :item="child" :key="childIndex">
+					<gridstack-item v-for="(child, childIndex) in section.section" :item="child" :key="childIndex"
+						@removeWidget="removeWidget">
 						<ComponentA v-if="child.component == 'a'" />
 						<ComponentB v-if="child.component == 'b'" />
 						<ComponentC v-if="child.component == 'c'" />
@@ -50,6 +60,9 @@ export default {
 		saveGrid(gridData) {
 			this.gridData = gridData
 			console.log(gridData)
+		},
+		removeWidget(el) {
+			this.$refs['gridstackLayout'].removeWidget(el)
 		}
 	},
 	data() {

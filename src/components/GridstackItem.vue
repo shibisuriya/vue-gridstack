@@ -2,6 +2,7 @@
 	<div class="grid-stack-item" v-bind="gridItemAttr">
 		<div :class="gridContentClass">
 			<div style="display:none" id="gridstack-data">{{ getComponent }}</div>
+			<button @click="test">Removed node</button>
 			<slot></slot>
 		</div>
 	</div>
@@ -9,6 +10,12 @@
 
 <script>
 export default {
+	methods: {
+		test(event) {
+			this.$emit('removeWidget', event.path[2])
+			console.log()
+		}
+	},
 	computed: {
 		gridContentClass() {
 			return {
