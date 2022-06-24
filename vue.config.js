@@ -3,10 +3,14 @@ module.exports = defineConfig({
   configureWebpack: (config) => {
     config.devtool = "eval-source-map";
 
-    config.output.devtoolModuleFilenameTemplate = (info) =>
-      info.resourcePath.match(/^\.\/\S*?\.vue$/)
-        ? `webpack-generated:///${info.resourcePath}?${info.hash}`
-        : `webpack-yourCode:///${info.resourcePath}`;
+    config.output.devtoolModuleFilenameTemplate = (info) => {
+      if (!info.resourcePath.match(/^\.\/\S*?\.vue$/)) {
+        return  `webpack-yourCode:///${info.resourcePath}`;
+      } else {
+        return ""
+      }
+
+    };
 
     config.output.devtoolFallbackModuleFilenameTemplate =
       "webpack:///[resource-path]?[hash]";
