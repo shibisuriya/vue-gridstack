@@ -1,31 +1,27 @@
 <template>
-    <div class="grid-stack">
-        <slot></slot>
-    </div>
+  <div class="grid-stack">
+    <slot></slot>
+  </div>
 </template>
 
 <script>
 export default {
-    methods: {
+  methods: {},
+  data() {
+    return {
+      collapsed: false,
+    };
+  },
+  computed: {
+    getAttr() {
+      return {};
     },
-    data() {
-        return {
-            collapsed: false
-        }
-    },
-    computed: {
-        getAttr() {
-            return {
-            }
-        }
-    }
-
-}
-
+  },
+};
 </script>
 
 <style lang="css">
 .grid-stack {
-    border: 1px solid red;
+  border: 1px solid red;
 }
 </style>

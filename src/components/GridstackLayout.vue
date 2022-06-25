@@ -72,21 +72,6 @@ export default {
       const doc = parser.parseFromString(html, "text/html");
       return JSON.parse(doc.getElementById("gridstack-data").innerHTML);
     },
-    // addItem() {
-    //   const newItemData = {
-    //     x: 0,
-    //     y: 0,
-    //     w: 3,
-    //     h: 4,
-    //     component: "a",
-    //     id: "newGridItem",
-    //   };
-    //   this.layout.push(newItemData);
-    //   const self = this;
-    //   Vue.nextTick(() => {
-    //     self.grid[MASTER_GRID_INDEX].makeWidget("#newGridItem");
-    //   });
-    // },
   },
   props: {
     layout: {
@@ -106,8 +91,8 @@ export default {
         oldVal;
         const self = this;
 
-        self.subscribeToEvents();
         Vue.nextTick(() => {
+          // The next two statements don't make sense, but it makes the entire program work, too bad.
           const el =
             self.grid[MASTER_GRID_INDEX].el.children[
               self.grid[MASTER_GRID_INDEX].el.children.length - 1
@@ -123,6 +108,7 @@ export default {
             acceptWidgets: true,
           });
           self.grid = gs;
+          self.subscribeToEvents();
         });
       },
     },
