@@ -22,6 +22,7 @@
       <gridstack-item v-for="(section, index) in layout" :key="index" :item="section" @removeWidget="removeWidget">
         <gridstack-section v-if="section.hasOwnProperty('section')" @shrink="shrink">
           <gridstack-item v-for="(child, childIndex) in section.section" :item="child" :key="childIndex">
+            <!-- Event is not emitted from componentA here...  -->
             <ComponentA v-if="child.component == 'a'" @testEvent="aEvent" />
             <ComponentB v-if="child.component == 'b'" />
             <ComponentC v-if="child.component == 'c'" />
@@ -34,6 +35,10 @@
         </template>
       </gridstack-item>
     </gridstack-layout>
+    <div>
+      <!-- This is componentA I made out of gridstack-layout which emits event to its parent fine. -->
+      <ComponentA @testEvent="aEvent" />
+    </div>
   </div>
 </template>
 
@@ -44,7 +49,7 @@ import GridstackSection from "./components/GridstackSection.vue";
 import ComponentA from "./widgets/ComponentA.vue";
 import ComponentB from "./widgets/ComponentB.vue";
 import ComponentC from "./widgets/ComponentC.vue";
-
+import { facilioEventBus } from "./main";
 export default {
   components: {
     GridstackLayout,
@@ -94,6 +99,14 @@ export default {
     removeWidget(el) {
       this.$refs["gridstackLayout"].removeWidget(el);
     },
+    registerEventBus() {
+      facilioEventBus.$on('testEvent', (data) => {
+        console.log(data)
+      })
+    }
+  },
+  mounted() {
+    this.registerEventBus()
   },
   data() {
     return {
