@@ -19,8 +19,8 @@ export default {
           const sections = self.grid[MASTER_GRID_INDEX].engine.nodes;
           sections.forEach((section) => {
             if (section.subGrid) {
-              if (section.el.getAttribute('gs-collapsed')) {
-                return
+              if (section.el.getAttribute("gs-collapsed")) {
+                return;
               }
               const subGrid = section.subGrid.engine.nodes;
               const maxHeight = Math.max(...subGrid.map((o) => o.y + o.h));
@@ -38,10 +38,18 @@ export default {
         });
       });
       eventBus.$on("shrink", (el, collapsed) => {
+        const sectionsArray = self.grid[MASTER_GRID_INDEX].getGridItems();
+        const index = sectionsArray.indexOf(el);
+        const subGridNodes =
+          sectionsArray[index].gridstackNode.subGrid.engine.nodes;
+        let maxHeight = 2;
+        if (subGridNodes.length > 0) {
+          maxHeight = Math.max(...subGridNodes.map((o) => o.y + o.h));
+        }
         if (collapsed) {
           self.grid[MASTER_GRID_INDEX].update(el, { h: 1 });
         } else {
-          self.grid[MASTER_GRID_INDEX].update(el, { h: 8 });
+          self.grid[MASTER_GRID_INDEX].update(el, { h: maxHeight + 1 });
         }
       });
       eventBus.$on("removeWidget", (el) => {
