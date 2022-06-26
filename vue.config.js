@@ -1,7 +1,7 @@
 const { defineConfig } = require("@vue/cli-service");
 module.exports = defineConfig({
   configureWebpack: (config) => {
-    config.devtool = "eval-source-map";
+    config.devtool = "source-map";
 
     config.output.devtoolModuleFilenameTemplate = (info) => {
       if (!info.resourcePath.match(/^\.\/\S*?\.vue$/)) {
