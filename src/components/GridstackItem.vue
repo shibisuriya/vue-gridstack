@@ -2,8 +2,8 @@
   <div class="grid-stack-item" v-bind="gridItemAttr">
     <div :class="gridContentClass">
       <div style="display: none" id="gridstack-data">{{ getComponent }}</div>
-      <!-- <button v-if="item.section" @click="removeSection">Remove Section</button>
-			<button  v-else @click="removeWidget">Remove Widget</button> -->
+      <button v-if="item.section" class="remove-section" @click="removeSection">Remove Section</button>
+      <button v-else @click="removeWidget">Remove Widget</button>
 
       <button class="shrink-button" v-if="item.section" @click="shrink">
         Shrink
@@ -65,7 +65,7 @@ export default {
         attr["gs-max-w"] = 12;
         attr["gs-min-w"] = 12;
         attr["gs-no-resize"] = "true";
-        attr['gs-collapsed'] = this.collapsed
+        attr["gs-collapsed"] = this.collapsed;
       }
       // The id attribute is used while adding a new widget (Grid item).
       // For more information refer gridstack's makeWidget().
@@ -104,5 +104,13 @@ export default {
   display: block;
   width: 100%;
   background-color: red;
+}
+.remove-section {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 40px;
+  box-sizing:  border-box;
+  display: inline;
 }
 </style>
