@@ -6,10 +6,12 @@
 </template>
 
 <script>
+import { facilioEventBus } from '@/main';
 export default {
   methods: {
     emitEvent() {
-      this.$emit("testEvent");
+      facilioEventBus.$emit('testEvent', 'hello')
+      // this.$emit("testEvent");
     },
   },
 };

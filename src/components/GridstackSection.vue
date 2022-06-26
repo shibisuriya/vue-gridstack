@@ -9,13 +9,7 @@ export default {
   methods: {},
   data() {
     return {
-      collapsed: false,
     };
-  },
-  computed: {
-    getAttr() {
-      return {};
-    },
   },
 };
 </script>

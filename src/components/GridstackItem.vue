@@ -33,6 +33,11 @@ export default {
       // this.$emit('shrink', event.path[4] )
     },
   },
+  data() {
+    return {
+      collapsed: false,
+    };
+  },
   computed: {
     gridContentClass() {
       return {
@@ -40,11 +45,7 @@ export default {
         "grid-stack-nested-item": !!this.item.section,
       };
     },
-    data() {
-      return {
-        collapsed: false,
-      };
-    },
+
     getComponent() {
       return {
         component: this.item.component,
@@ -64,6 +65,7 @@ export default {
         attr["gs-max-w"] = 12;
         attr["gs-min-w"] = 12;
         attr["gs-no-resize"] = "true";
+        attr['gs-collapsed'] = this.collapsed
       }
       // The id attribute is used while adding a new widget (Grid item).
       // For more information refer gridstack's makeWidget().

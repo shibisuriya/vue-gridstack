@@ -19,6 +19,9 @@ export default {
           const sections = self.grid[MASTER_GRID_INDEX].engine.nodes;
           sections.forEach((section) => {
             if (section.subGrid) {
+              if (section.el.getAttribute('gs-collapsed')) {
+                return
+              }
               const subGrid = section.subGrid.engine.nodes;
               const maxHeight = Math.max(...subGrid.map((o) => o.y + o.h));
 

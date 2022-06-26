@@ -35,10 +35,6 @@
         </template>
       </gridstack-item>
     </gridstack-layout>
-    <div>
-      <!-- This is componentA I made out of gridstack-layout which emits event to its parent fine. -->
-      <ComponentA @testEvent="aEvent" />
-    </div>
   </div>
 </template>
 
