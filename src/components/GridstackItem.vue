@@ -106,7 +106,7 @@ export default {
 
 .shrink-button {
   box-sizing: border-box;
-  height: 40px;
+  height: 50px;
   display: block;
   width: 100%;
   background-color: red;
@@ -116,7 +116,7 @@ export default {
   position: absolute;
   right: 0;
   top: 0;
-  height: 40px;
+  height: 50px;
   box-sizing: border-box;
   display: inline;
 }

@@ -133,8 +133,7 @@ export default {
             float: false,
             cellHeight: "70px",
             minRow: MIN_ROW,
-            margin: 10,
-            marginTop: 20,
+       
             column: 96,
             acceptWidgets: true,
           });
@@ -152,8 +151,6 @@ export default {
       float: false,
       cellHeight: "70px",
       minRow: MIN_ROW,
-      margin: 10,
-      marginTop: 20,
       column: 96,
       acceptWidgets: true,
     });
