@@ -21,7 +21,9 @@
     <gridstack-layout @save="saveGrid" ref="gridstackLayout" :layout="layout">
       <gridstack-item v-for="(section, index) in layout" :key="index" :item="section" @removeWidget="removeWidget">
         <gridstack-section v-if="section.hasOwnProperty('section')" @shrink="shrink">
-          <gridstack-item v-for="(child, childIndex) in section.section" :item="child" :key="childIndex">
+          <gridstack-item v-for="(
+							child, childIndex
+						) in section.section" :item="child" :key="childIndex">
             <!-- Event is not emitted from componentA here...  -->
             <ComponentA v-if="child.component == 'a'" @testEvent="aEvent" />
             <ComponentB v-if="child.component == 'b'" />
@@ -29,7 +31,7 @@
           </gridstack-item>
         </gridstack-section>
         <template v-else>
-          <ComponentA v-if="section.component == 'a'" />
+          <ComponentA v-if="section.component == 'a'" @testEvent="aEvent" />
           <ComponentB v-if="section.component == 'b'" />
           <ComponentC v-if="section.component == 'c'" />
         </template>
@@ -45,7 +47,6 @@ import GridstackSection from "./components/GridstackSection.vue";
 import ComponentA from "./widgets/ComponentA.vue";
 import ComponentB from "./widgets/ComponentB.vue";
 import ComponentC from "./widgets/ComponentC.vue";
-import { facilioEventBus } from "./main";
 export default {
   components: {
     GridstackLayout,
@@ -76,7 +77,7 @@ export default {
             y: 2,
             w: 2,
             h: 2,
-            component: "c",
+            component: "a",
           },
         ],
         x: 1,
@@ -95,14 +96,9 @@ export default {
     removeWidget(el) {
       this.$refs["gridstackLayout"].removeWidget(el);
     },
-    registerEventBus() {
-      facilioEventBus.$on('testEvent', (data) => {
-        console.log(data)
-      })
-    }
+
   },
   mounted() {
-    this.registerEventBus()
   },
   data() {
     return {

@@ -6,15 +6,14 @@
 </template>
 
 <script>
-import { facilioEventBus } from '@/main';
 export default {
   methods: {
     emitEvent() {
-      facilioEventBus.$emit('testEvent', 'hello')
-      // this.$emit("testEvent");
+      this.$emit("testEvent");
     },
   },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>
