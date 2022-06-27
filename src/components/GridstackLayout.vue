@@ -15,7 +15,7 @@ export default {
     subscribeToEvents() {
       const self = this;
       self.grid.forEach((g) => {
-        g.on("dropped dragstop drag resize", () => {
+        g.on("dropped dragstop drag resize removed", () => {
           const sections = self.grid[MASTER_GRID_INDEX].engine.nodes;
           sections.forEach((section) => {
             if (section.subGrid) {
