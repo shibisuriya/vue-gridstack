@@ -87,7 +87,7 @@ export default {
           {
             x: 1,
             y: 2,
-            w: 2,
+            w: 47,
             h: 2,
             component: "a",
           },
