@@ -66,13 +66,16 @@ export default {
       gridData = gridData.map((item) => {
         if (item.content) {
           // This is a stand alone widget without any section.
-          item["content"] = self.getDataFromHTML(item.content);
+          item["component"] = self.getDataFromHTML(item.content).component;
+          delete item.content
         } else if (item.subGrid.children) {
           // This is a section and contains widget inside it.
-          item.subGrid.children = item.subGrid.children.map((child) => {
-            child["content"] = self.getDataFromHTML(child.content);
+          item.section = item.subGrid.children.map((child) => {
+            child["component"] = self.getDataFromHTML(child.content).component;
+            delete child.content
             return child;
           });
+          delete item.subGrid
         }
         return item;
       });
@@ -106,7 +109,7 @@ export default {
           // The next two statements don't make sense, but it makes the entire program work, too bad.
           const el =
             self.grid[MASTER_GRID_INDEX].el.children[
-              self.grid[MASTER_GRID_INDEX].el.children.length - 1
+            self.grid[MASTER_GRID_INDEX].el.children.length - 1
             ];
           self.grid[MASTER_GRID_INDEX].makeWidget(el);
           const gs = GridStack.initAll({
@@ -124,7 +127,7 @@ export default {
       },
     },
   },
-  created() {},
+  created() { },
   mounted() {
     console.log(this.layout);
     const self = this;

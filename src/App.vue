@@ -104,46 +104,7 @@ export default {
     return {
       layoutCopy: null,
       gridData: null,
-      layout: [
-        {
-          x: 1,
-          y: 2,
-          w: 2,
-          h: 2,
-          component: "a",
-          description: "hello",
-        },
-        {
-          section: [
-            {
-              x: 1,
-              y: 2,
-              w: 2,
-              h: 2,
-              component: "c",
-            },
-          ],
-          x: 0,
-          y: 0,
-          w: 12,
-          h: 2,
-        },
-        {
-          section: [
-            {
-              x: 1,
-              y: 2,
-              w: 2,
-              h: 2,
-              component: "c",
-            },
-          ],
-          x: 1,
-          y: 2,
-          w: 12,
-          h: 2,
-        },
-      ],
+      layout: [{ "x": 0, "y": 0, "w": 12, "h": 1, "maxW": 12, "minW": 12, "noResize": true, "section": [] }, { "x": 0, "y": 1, "w": 2, "h": 2, "component": "c" }, { "x": 2, "y": 1, "w": 2, "h": 4, "component": "a" }, { "x": 4, "y": 1, "w": 2, "h": 2, "component": "a" }, { "x": 6, "y": 1, "w": 2, "h": 2, "component": "c" }, { "x": 8, "y": 1, "w": 2, "h": 2, "component": "a" }, { "x": 10, "y": 1, "w": 2, "h": 2, "component": "a" }, { "x": 0, "y": 3, "w": 2, "h": 2, "component": "c" }, { "x": 4, "y": 3, "w": 2, "h": 2, "component": "c" }, { "x": 6, "y": 3, "w": 2, "h": 2, "component": "a" }, { "x": 8, "y": 3, "w": 2, "h": 2, "component": "c" }, { "x": 0, "y": 5, "w": 12, "h": 1, "maxW": 12, "minW": 12, "noResize": true, "section": [] }, { "x": 0, "y": 6, "w": 12, "h": 1, "maxW": 12, "minW": 12, "noResize": true, "section": [] }, { "x": 0, "y": 7, "w": 12, "h": 1, "maxW": 12, "minW": 12, "noResize": true, "section": [] }]
     };
   },
 };
