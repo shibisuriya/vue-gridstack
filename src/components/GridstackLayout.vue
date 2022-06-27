@@ -66,12 +66,24 @@ export default {
       gridData = gridData.map((item) => {
         if (item.content) {
           // This is a stand alone widget without any section.
-          item["component"] = self.getDataFromHTML(item.content).component;
+          let propItem = self.getDataFromHTML(item.content).item;
+          delete propItem.x
+          delete propItem.y
+
+          delete propItem.w
+
+          delete propItem.h
           delete item.content
+          item = { ...item, ...propItem }
         } else if (item.subGrid.children) {
           // This is a section and contains widget inside it.
           item.section = item.subGrid.children.map((child) => {
-            child["component"] = self.getDataFromHTML(child.content).component;
+            let childItem = self.getDataFromHTML(child.content).item;
+            delete childItem.x
+            delete childItem.y
+            delete childItem.w
+            delete childItem.h
+            child = { ...child, ...childItem }
             delete child.content
             return child;
           });

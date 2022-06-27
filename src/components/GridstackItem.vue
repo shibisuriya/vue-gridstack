@@ -48,9 +48,10 @@ export default {
 
     getComponent() {
       return {
-        component: this.item.component,
-        otherData:
-          "... Data which has been passed as props to grid-stack-item ... ",
+        // component: this.item.component,
+        // otherData:
+        //   "... Data which has been passed as props to grid-stack-item ... ",
+        item: this.item
       };
     },
     gridItemAttr() {
@@ -98,6 +99,7 @@ export default {
   background-color: rgb(203, 123, 123);
   overflow: hidden !important;
 }
+
 .shrink-button {
   box-sizing: border-box;
   height: 40px;
@@ -105,12 +107,13 @@ export default {
   width: 100%;
   background-color: red;
 }
+
 .remove-section {
   position: absolute;
   right: 0;
   top: 0;
   height: 40px;
-  box-sizing:  border-box;
+  box-sizing: border-box;
   display: inline;
 }
 </style>
