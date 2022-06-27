@@ -77,6 +77,11 @@ export default {
           item = { ...item, ...propItem }
         } else if (item.subGrid.children) {
           // This is a section and contains widget inside it.
+          if (item.h == 1) {
+            item.collapsed = true
+          } else {
+            item.collapsed = false
+          }
           item.section = item.subGrid.children.map((child) => {
             let childItem = self.getDataFromHTML(child.content).item;
             delete childItem.x

@@ -17,6 +17,11 @@
 import { eventBus } from "../main";
 
 export default {
+  mounted() {
+    if (this.item.section) {
+      this.collapsed = this.item.collapsed
+    } 
+  },
   methods: {
     removeWidget(event) {
       eventBus.$emit("removeWidget", event.path[2]);
@@ -61,6 +66,8 @@ export default {
         "gs-w": this.item.w,
         "gs-h": this.item.h,
         "gs-removable": true,
+        "gs-min-w": this.item.minW,
+        "gs-min-h": this.item.minH
       };
       if (this.item.section) {
         attr["gs-max-w"] = 12;
