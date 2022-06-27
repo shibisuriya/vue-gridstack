@@ -70,8 +70,8 @@ export default {
         "gs-min-h": this.item.minH
       };
       if (this.item.section) {
-        attr["gs-max-w"] = 12;
-        attr["gs-min-w"] = 12;
+        attr["gs-max-w"] = 96;
+        attr["gs-min-w"] = 96;
         attr["gs-no-resize"] = "true";
         attr["gs-collapsed"] = this.collapsed;
       }
@@ -98,9 +98,6 @@ export default {
 .grid-stack-placeholder {
   border: 10px dashed red;
 }
-
-@import "/node_modules/gridstack/dist/gridstack.min.css";
-@import "/node_modules/gridstack/dist/gridstack-extra.css";
 
 .grid-stack-nested-item {
   background-color: rgb(203, 123, 123);
