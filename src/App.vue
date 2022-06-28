@@ -64,6 +64,10 @@ import GridstackSection from "./components/GridstackSection.vue";
 import ComponentA from "./widgets/ComponentA.vue";
 import ComponentB from "./widgets/ComponentB.vue";
 import ComponentC from "./widgets/ComponentC.vue";
+import { httpGetData } from "@/data/httpGetData";
+import { serialize } from "@/utils/serialize";
+import { unserialize } from "@/utils/unserialize";
+
 export default {
   components: {
     GridstackLayout,
@@ -97,31 +101,22 @@ export default {
       this.$refs["gridstackLayout"].shrink(el);
     },
     saveGrid(gridData) {
-      this.gridData = gridData;
-      console.log(gridData);
+      this.gridData =  serialize(gridData);
     },
     removeWidget(el) {
       this.$refs["gridstackLayout"].removeWidget(el);
     },
   },
   mounted() {},
+  created() {
+    this.layout = unserialize(httpGetData);
+    console.log(this.layout);
+  },
   data() {
     return {
       layoutCopy: null,
       gridData: null,
-      layout: [
-        {
-          x: 0,
-          y: 0,
-          w: 96,
-          h: 5,
-          maxW: 96,
-          minW: 96,
-          noResize: true,
-          collapsed: true,
-          section: [{ x: 0, y: 0, w: 34, h: 14, component: "a" }],
-        },
-      ],
+      layout: [],
     };
   },
 };
