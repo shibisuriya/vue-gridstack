@@ -8,7 +8,7 @@
 import GridStack from "/node_modules/gridstack/dist/gridstack-h5.js";
 import { eventBus } from "../main";
 import Vue from "vue";
-const MIN_ROW = 3;
+const MIN_ROW = 15;
 const MASTER_GRID_INDEX = 0; // Master grid is the parent (.grid-stack) of all .grid-stack(s), this component supports nested grids.
 export default {
   methods: {
@@ -26,10 +26,10 @@ export default {
               const maxHeight = Math.max(...subGrid.map((o) => o.y + o.h));
 
               if (subGrid.length == 0) {
-                self.grid[MASTER_GRID_INDEX].update(section.el, { h: 3 });
+                self.grid[MASTER_GRID_INDEX].update(section.el, { h: MIN_ROW + 6 });
               } else {
                 self.grid[MASTER_GRID_INDEX].update(section.el, {
-                  h: maxHeight + 1,
+                  h: maxHeight + 6,
                 });
               }
               return;
@@ -38,18 +38,18 @@ export default {
         });
       });
       eventBus.$on("shrink", (el, collapsed) => {
-        const sectionsArray = self.grid[MASTER_GRID_INDEX].getGridItems();
-        const index = sectionsArray.indexOf(el);
-        const subGridNodes =
-          sectionsArray[index].gridstackNode.subGrid.engine.nodes;
-        let maxHeight = 2;
-        if (subGridNodes.length > 0) {
-          maxHeight = Math.max(...subGridNodes.map((o) => o.y + o.h));
-        }
         if (collapsed) {
-          self.grid[MASTER_GRID_INDEX].update(el, { h: 1 });
+          self.grid[MASTER_GRID_INDEX].update(el, { h: 5 });
         } else {
-          self.grid[MASTER_GRID_INDEX].update(el, { h: maxHeight + 1 });
+          const sectionsArray = self.grid[MASTER_GRID_INDEX].getGridItems();
+          const index = sectionsArray.indexOf(el);
+          const subGridNodes =
+            sectionsArray[index].gridstackNode.subGrid.engine.nodes;
+          let maxHeight = 15;
+          if (subGridNodes.length > 0) {
+            maxHeight = Math.max(...subGridNodes.map((o) => o.y + o.h));
+          }
+          self.grid[MASTER_GRID_INDEX].update(el, { h: maxHeight + 6 });
         }
       });
       eventBus.$on("removeWidget", (el) => {
@@ -133,7 +133,8 @@ export default {
             ];
           self.grid[MASTER_GRID_INDEX].makeWidget(el);
           const gs = GridStack.initAll({
-            cellHeight: "initial",
+            disableOneColumnMode: true,
+            cellHeight: "15px", // Magic number, best value according to me...
             staticGrid: this.static,
             float: false,
             minRow: MIN_ROW,
@@ -151,7 +152,9 @@ export default {
   mounted() {
     const self = this;
     self.grid = GridStack.initAll({
-      cellHeight: "initial",
+      cellHeight: "15px", // Magic number, best value according to me...
+
+      disableOneColumnMode: true,
       staticGrid: this.static,
       float: false,
       minRow: MIN_ROW,
@@ -165,6 +168,8 @@ export default {
 
 <style lang="scss">
 @use "sass:math";
+@import "/node_modules/gridstack/dist/gridstack.min.css";
+@import "/node_modules/gridstack/dist/gridstack-extra.css";
 .grid-stack > .grid-stack-item {
   $gridstack-columns: 96;
 
@@ -185,7 +190,6 @@ export default {
     }
   }
 }
-@import "/node_modules/gridstack/dist/gridstack.min.css";
 
 .grid-stack {
   border: 1px solid red;

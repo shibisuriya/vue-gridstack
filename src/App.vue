@@ -75,32 +75,22 @@ export default {
   },
   methods: {
     addWidget() {
-      this.layout.push({
-        component: "c",
-        x: 0,
-        y: 0,
-        w: 50,
-        h: 40,
-      });
+      this.layout.push({ x: 0, y: 0, w: 34, h: 14, component: "a" });
     },
     aEvent() {
       console.log("hello");
     },
     addSection() {
       this.layout.push({
-        section: [
-          {
-            x: 1,
-            y: 2,
-            w: 47,
-            h: 10,
-            component: "a",
-          },
-        ],
-        x: 1,
-        y: 2,
-        w: 12,
-        h: 40,
+        x: 0,
+        y: 14,
+        w: 96,
+        h: 5,
+        maxW: 96,
+        minW: 96,
+        noResize: true,
+        collapsed: false,
+        section: [{ x: 0, y: 0, w: 51, h: 16, component: "a" }],
       });
     },
     shrink(el) {
@@ -120,17 +110,16 @@ export default {
       layoutCopy: null,
       gridData: null,
       layout: [
-        { x: 1, y: 0, w: 37, h: 16, component: "a" },
         {
           x: 0,
-          y: 16,
+          y: 0,
           w: 96,
-          h: 22,
+          h: 5,
           maxW: 96,
           minW: 96,
           noResize: true,
-          collapsed: false,
-          section: [{ x: 0, y: 0, w: 48, h: 21, component: "c" }],
+          collapsed: true,
+          section: [{ x: 0, y: 0, w: 34, h: 14, component: "a" }],
         },
       ],
     };
