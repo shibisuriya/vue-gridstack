@@ -20,7 +20,12 @@
     </div>
     <!-- Modifying the props from within a child component is a bad practice, if you want to get the current state of the grids,
 		use @save event. The props passed into the gridstack-layout won't sync automatically (This method is followed in vue-grid-stack). -->
-    <gridstack-layout @save="saveGrid" ref="gridstackLayout" :layout="layout" :static="false">
+    <gridstack-layout
+      @save="saveGrid"
+      ref="gridstackLayout"
+      :layout="layout"
+      :static="false"
+    >
       <gridstack-item
         v-for="(section, index) in layout"
         :key="index"
@@ -115,66 +120,17 @@ export default {
       layoutCopy: null,
       gridData: null,
       layout: [
+        { x: 0, y: 0, w: 50, h: 2, component: "c" },
         {
           x: 0,
-          y: 0,
-          w: 96,
-          h: 1,
-          maxW: 96,
-          minW: 96,
-          noResize: true,
-          collapsed: true,
-          section: [
-            { x: 14, y: 0, w: 46, h: 4, component: "a" },
-            { x: 0, y: 4, w: 47, h: 2, component: "a" },
-          ],
-        },
-        {
-          x: 0,
-          y: 1,
+          y: 2,
           w: 96,
           h: 3,
           maxW: 96,
           minW: 96,
           noResize: true,
           collapsed: false,
-          section: [{ x: 58, y: 0, w: 36, h: 2, component: "a" }],
-        },
-        {
-          x: 0,
-          y: 4,
-          w: 96,
-          h: 1,
-          maxW: 96,
-          minW: 96,
-          noResize: true,
-          collapsed: true,
-          section: [
-            { x: 0, y: 0, w: 46, h: 6, component: "a" },
-            { x: 53, y: 0, w: 23, h: 2, component: "a" },
-          ],
-        },
-        {
-          x: 0,
-          y: 5,
-          w: 96,
-          h: 1,
-          maxW: 96,
-          minW: 96,
-          noResize: true,
-          collapsed: true,
-          section: [],
-        },
-        {
-          x: 0,
-          y: 6,
-          w: 96,
-          h: 1,
-          maxW: 96,
-          minW: 96,
-          noResize: true,
-          collapsed: true,
-          section: [{ x: 8, y: 0, w: 49, h: 6, component: "c" }],
+          section: [{ x: 1, y: 0, w: 47, h: 2, component: "a" }],
         },
       ],
     };
