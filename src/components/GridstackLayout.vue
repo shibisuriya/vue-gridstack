@@ -109,8 +109,8 @@ export default {
       required: true,
     },
     static: {
-      default: false
-    }
+      default: false,
+    },
   },
   watch: {
     layout: {
@@ -133,11 +133,11 @@ export default {
             ];
           self.grid[MASTER_GRID_INDEX].makeWidget(el);
           const gs = GridStack.initAll({
+            cellHeight: "initial",
             staticGrid: this.static,
             float: false,
-            cellHeight: "70px",
             minRow: MIN_ROW,
-       
+
             column: 96,
             acceptWidgets: true,
           });
@@ -151,9 +151,9 @@ export default {
   mounted() {
     const self = this;
     self.grid = GridStack.initAll({
+      cellHeight: "initial",
       staticGrid: this.static,
       float: false,
-      cellHeight: "70px",
       minRow: MIN_ROW,
       column: 96,
       acceptWidgets: true,
@@ -165,8 +165,6 @@ export default {
 
 <style lang="scss">
 @use "sass:math";
-@import "/node_modules/gridstack/dist/gridstack.min.css";
-@import "/node_modules/gridstack/dist/gridstack-extra.css";
 .grid-stack > .grid-stack-item {
   $gridstack-columns: 96;
 
@@ -187,6 +185,7 @@ export default {
     }
   }
 }
+@import "/node_modules/gridstack/dist/gridstack.min.css";
 
 .grid-stack {
   border: 1px solid red;

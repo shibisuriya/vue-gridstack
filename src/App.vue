@@ -80,7 +80,7 @@ export default {
         x: 0,
         y: 0,
         w: 50,
-        h: 2,
+        h: 40,
       });
     },
     aEvent() {
@@ -93,14 +93,14 @@ export default {
             x: 1,
             y: 2,
             w: 47,
-            h: 2,
+            h: 10,
             component: "a",
           },
         ],
         x: 1,
         y: 2,
         w: 12,
-        h: 2,
+        h: 40,
       });
     },
     shrink(el) {
@@ -120,17 +120,17 @@ export default {
       layoutCopy: null,
       gridData: null,
       layout: [
-        { x: 0, y: 0, w: 50, h: 2, component: "c" },
+        { x: 1, y: 0, w: 37, h: 16, component: "a" },
         {
           x: 0,
-          y: 2,
+          y: 16,
           w: 96,
-          h: 3,
+          h: 22,
           maxW: 96,
           minW: 96,
           noResize: true,
           collapsed: false,
-          section: [{ x: 1, y: 0, w: 47, h: 2, component: "a" }],
+          section: [{ x: 0, y: 0, w: 48, h: 21, component: "c" }],
         },
       ],
     };
