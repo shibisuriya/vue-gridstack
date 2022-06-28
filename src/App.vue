@@ -20,7 +20,7 @@
     </div>
     <!-- Modifying the props from within a child component is a bad practice, if you want to get the current state of the grids,
 		use @save event. The props passed into the gridstack-layout won't sync automatically (This method is followed in vue-grid-stack). -->
-    <gridstack-layout @save="saveGrid" ref="gridstackLayout" :layout="layout" :static="true">
+    <gridstack-layout @save="saveGrid" ref="gridstackLayout" :layout="layout" :static="false">
       <gridstack-item
         v-for="(section, index) in layout"
         :key="index"

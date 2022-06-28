@@ -149,8 +149,6 @@ export default {
   },
   created() {},
   mounted() {
-    console.log('static', ' -> ', this.static)
-    // console.log(this.layout);
     const self = this;
     self.grid = GridStack.initAll({
       staticGrid: this.static,
