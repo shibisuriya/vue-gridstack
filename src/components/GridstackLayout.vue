@@ -108,6 +108,9 @@ export default {
     layout: {
       required: true,
     },
+    static: {
+      default: false
+    }
   },
   watch: {
     layout: {
@@ -130,6 +133,7 @@ export default {
             ];
           self.grid[MASTER_GRID_INDEX].makeWidget(el);
           const gs = GridStack.initAll({
+            staticGrid: this.static,
             float: false,
             cellHeight: "70px",
             minRow: MIN_ROW,
@@ -145,9 +149,11 @@ export default {
   },
   created() {},
   mounted() {
-    console.log(this.layout);
+    console.log('static', ' -> ', this.static)
+    // console.log(this.layout);
     const self = this;
     self.grid = GridStack.initAll({
+      staticGrid: this.static,
       float: false,
       cellHeight: "70px",
       minRow: MIN_ROW,
