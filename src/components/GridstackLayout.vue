@@ -77,7 +77,7 @@ export default {
           item = { ...item, ...propItem };
         } else if (item.subGrid.children) {
           // This is a section and contains widget inside it.
-          if (item.h == 1) {
+          if (item.h == 5) {
             item.collapsed = true;
           } else {
             item.collapsed = false;
