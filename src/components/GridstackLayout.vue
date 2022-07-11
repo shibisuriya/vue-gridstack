@@ -12,11 +12,20 @@ const MIN_ROW = 15;
 const MASTER_GRID_INDEX = 0; // Master grid is the parent (.grid-stack) of all .grid-stack(s), this component supports nested grids.
 export default {
   methods: {
-    subscribeToEvents() {
-      const self = this;
-      self.grid.forEach((g) => {
-        g.on("dropped dragstop drag resize removed", () => {
-          const sections = self.grid[MASTER_GRID_INDEX].engine.nodes;
+
+    subscribeToAdjustSectionHeight() {
+      // This method is used to adjust the height of a gridstack section when we resize / re-arrange
+      // the items present inside the gridstack layout.
+      const { grid } = this || {}
+      grid.forEach((g) => {
+        g.on("dragstop drag resize removed", (event) => {
+          // This callback also gets called when the props to build the gridstack layout changes,
+          // because we destory the gridstack instances when a new widget or section is pushed
+          // to the layout array, when we destroy a gridstack instance this callback is called
+          console.log(event.type)
+          const sections = grid[MASTER_GRID_INDEX]?.engine?.nodes;
+          if (!sections)
+            return
           sections.forEach((section) => {
             if (section.subGrid) {
               if (section.el.getAttribute("gs-collapsed")) {
@@ -26,9 +35,9 @@ export default {
               const maxHeight = Math.max(...subGrid.map((o) => o.y + o.h));
 
               if (subGrid.length == 0) {
-                self.grid[MASTER_GRID_INDEX].update(section.el, { h: MIN_ROW + 6 });
+                grid[MASTER_GRID_INDEX].update(section.el, { h: MIN_ROW + 6 });
               } else {
-                self.grid[MASTER_GRID_INDEX].update(section.el, {
+                grid[MASTER_GRID_INDEX].update(section.el, {
                   h: maxHeight + 6,
                 });
               }
@@ -37,11 +46,14 @@ export default {
           });
         });
       });
+    },
+    subscribeToShrink() {
       eventBus.$on("shrink", (el, collapsed) => {
+        const { grid } = this || {}
         if (collapsed) {
-          self.grid[MASTER_GRID_INDEX].update(el, { h: 5 });
+          grid[MASTER_GRID_INDEX].update(el, { h: 5 });
         } else {
-          const sectionsArray = self.grid[MASTER_GRID_INDEX].getGridItems();
+          const sectionsArray = grid[MASTER_GRID_INDEX].getGridItems();
           const index = sectionsArray.indexOf(el);
           const subGridNodes =
             sectionsArray[index].gridstackNode.subGrid.engine.nodes;
@@ -49,17 +61,30 @@ export default {
           if (subGridNodes.length > 0) {
             maxHeight = Math.max(...subGridNodes.map((o) => o.y + o.h));
           }
-          self.grid[MASTER_GRID_INDEX].update(el, { h: maxHeight + 6 });
+          grid[MASTER_GRID_INDEX].update(el, { h: maxHeight + 6 });
         }
       });
+    },
+    subscribeToRemoveWidget() {
       eventBus.$on("removeWidget", (el) => {
-        self.grid.forEach((g) => g.removeWidget(el));
-      });
-      eventBus.$on("removeSection", (el) => {
-        self.grid[MASTER_GRID_INDEX].removeWidget(el);
+        const { grid } = this || {}
+        grid.forEach((g) => g.removeWidget(el));
       });
     },
-    save() {
+    subscribeToRemoveSection() {
+      eventBus.$on("removeSection", (el) => {
+        const { grid } = this || {}
+        grid[MASTER_GRID_INDEX].removeWidget(el);
+      });
+
+    },
+    subscribeToEvents() {
+      this.subscribeToAdjustSectionHeight()
+      this.subscribeToShrink()
+      this.subscribeToRemoveWidget()
+      this.subscribeToRemoveSection()
+    },
+    getCurrentState() {
       const self = this;
       let gridData = this.grid[MASTER_GRID_INDEX].save();
 
@@ -69,9 +94,7 @@ export default {
           let propItem = self.getDataFromHTML(item.content).item;
           delete propItem.x;
           delete propItem.y;
-
           delete propItem.w;
-
           delete propItem.h;
           delete item.content;
           item = { ...item, ...propItem };
@@ -96,7 +119,12 @@ export default {
         }
         return item;
       });
+      return gridData
+    },
+    save() {
+      const gridData = this.getCurrentState() 
       this.$emit("save", gridData);
+
     },
     getDataFromHTML(html) {
       const parser = new DOMParser();
@@ -117,28 +145,22 @@ export default {
       // the callback will be called immediately after the start of the observation
       immediate: true,
       deep: true,
-      handler(val, oldVal) {
+      handler(newVal, oldVal) {
         if (oldVal == undefined) {
+          // This is the first time the prop (layout) is recieved by the component... 
           return;
         }
-        val;
-        oldVal;
         const self = this;
-
+        // Each time the prop from the parent component changes this watcher will destroy gs layout,
+        // and create a new gs layout.
+        self.grid.forEach(g => g.destroy(false)) // if false is passed to destroy() the DOM nodes are not removed, just the gridstack instance is destoried.
         Vue.nextTick(() => {
-          // The next two statements don't make sense, but it makes the entire program work, too bad.
-          const el =
-            self.grid[MASTER_GRID_INDEX].el.children[
-              self.grid[MASTER_GRID_INDEX].el.children.length - 1
-            ];
-          self.grid[MASTER_GRID_INDEX].makeWidget(el);
           const gs = GridStack.initAll({
             disableOneColumnMode: true,
             cellHeight: "15px", // Magic number, best value according to me...
             staticGrid: this.static,
             float: false,
             minRow: MIN_ROW,
-
             column: 96,
             acceptWidgets: true,
           });
@@ -148,7 +170,9 @@ export default {
       },
     },
   },
-  created() {},
+  created() {
+
+  },
   mounted() {
     const self = this;
     self.grid = GridStack.initAll({
@@ -170,7 +194,8 @@ export default {
 @use "sass:math";
 @import "/node_modules/gridstack/dist/gridstack.min.css";
 @import "/node_modules/gridstack/dist/gridstack-extra.css";
-.grid-stack > .grid-stack-item {
+
+.grid-stack>.grid-stack-item {
   $gridstack-columns: 96;
 
   min-width: math.div(100%, $gridstack-columns);
@@ -179,12 +204,15 @@ export default {
     &[gs-w="#{$i}"] {
       width: math.div(100%, $gridstack-columns) * $i;
     }
+
     &[gs-x="#{$i}"] {
       left: math.div(100%, $gridstack-columns) * $i;
     }
+
     &[gs-min-w="#{$i}"] {
       min-width: math.div(100%, $gridstack-columns) * $i;
     }
+
     &[gs-max-w="#{$i}"] {
       max-width: math.div(100%, $gridstack-columns) * $i;
     }
