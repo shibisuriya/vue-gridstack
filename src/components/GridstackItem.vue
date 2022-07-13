@@ -4,11 +4,22 @@
       <div style="display: none" id="gridstack-data">{{ getComponent }}</div>
       <button v-if="item.section" class="remove-section" @click="removeSection">Remove Section</button>
       <button v-else @click="removeWidget">Remove Widget</button>
+      <el-dropdown @command="handleCommand">
+        <span class="el-dropdown-link">
+          Option<i class="el-icon-arrow-down el-icon--right"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="helpText">Help Text</el-dropdown-item>
+          <el-dropdown-item command="removeWidget">Remove Widget</el-dropdown-item>
+          <el-dropdown-item command="duplicate">Duplicate</el-dropdown-item>
+
+        </el-dropdown-menu>
+      </el-dropdown>
 
       <button class="shrink-button" v-if="item.section" @click="shrink">
         Shrink
       </button>
-      <slot></slot>
+      <slot :item="item"></slot>
     </div>
   </div>
 </template>
@@ -20,9 +31,17 @@ export default {
   mounted() {
     if (this.item.section) {
       this.collapsed = this.item.collapsed
-    } 
+    }
   },
+
   methods: {
+    handleCommand(command) {
+      if (command == 'removeWidget') {
+        eventBus.$emit("removeWidget", this.$el);
+      } else if (command == 'duplicate') {
+        this.$emit('duplicate', this.item)
+      }
+    },
     removeWidget(event) {
       eventBus.$emit("removeWidget", event.path[2]);
     },
