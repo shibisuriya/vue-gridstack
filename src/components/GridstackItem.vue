@@ -1,142 +1,106 @@
 <template>
-  <div class="grid-stack-item" v-bind="gridItemAttr">
-    <div :class="gridContentClass">
-      <div style="display: none" id="gridstack-data">{{ getComponent }}</div>
-      <button v-if="item.section" class="remove-section" @click="removeSection">Remove Section</button>
-      <button v-else @click="removeWidget">Remove Widget</button>
-      <el-dropdown @command="handleCommand">
-        <span class="el-dropdown-link">
-          Option<i class="el-icon-arrow-down el-icon--right"></i>
-        </span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="helpText">Help Text</el-dropdown-item>
-          <el-dropdown-item command="removeWidget">Remove Widget</el-dropdown-item>
-          <el-dropdown-item command="duplicate">Duplicate</el-dropdown-item>
-
-        </el-dropdown-menu>
-      </el-dropdown>
-
-      <button class="shrink-button" v-if="item.section" @click="shrink">
-        Shrink
-      </button>
-      <slot :item="item"></slot>
+  <div
+    class="grid-stack-item"
+    style="border: 1px solid black"
+    :gs-id="id"
+    :gs-x="x"
+    :gs-y="y"
+    :gs-w="w"
+    :gs-h="h"
+    :gs-min-w="minW"
+    :gs-min-h="minH"
+    :gs-max-w="maxW"
+    :gs-max-h="maxH"
+    :gs-no-resize="resize"
+    :gs-no-move="move"
+    :gs-locked="locked"
+  >
+    <div class="grid-stack-item-content">
+      <slot></slot>
     </div>
   </div>
 </template>
 
 <script>
-import { eventBus } from "../main";
-
 export default {
+  props: {
+    id: {
+      type: String,
+      required: true,
+    },
+    x: {
+      type: Number,
+      required: true,
+    },
+    y: {
+      type: Number,
+      required: true,
+    },
+    w: {
+      type: Number,
+      required: true,
+    },
+    h: {
+      type: Number,
+      required: true,
+    },
+    minW: {
+      type: Number,
+      default: 0,
+    },
+    minH: {
+      type: Number,
+      default: 0,
+    },
+    maxW: {
+      type: Number,
+      default: 0,
+    },
+    maxH: {
+      type: Number,
+      default: 0,
+    },
+    resize: {
+      type: Boolean,
+      default: false,
+    },
+    locked: {
+      type: Boolean,
+      default: false,
+    },
+    move: {
+      type: Boolean,
+      default: false,
+    },
+    resizeHandles: {
+      type: String,
+      default: null,
+    },
+    noScroll: {
+      // Show scroll on gridItem or not...
+      type: Boolean,
+      default: false,
+    },
+  },
   mounted() {
-    if (this.item.section) {
-      this.collapsed = this.item.collapsed
+    if (this.subGridObj) {
+      this.subGridObj.makeWidget(this.$el);
+    } else if (this.masterGridObj) {
+      this.masterGridObj.makeWidget(this.$el);
     }
   },
-
-  methods: {
-    handleCommand(command) {
-      if (command == 'removeWidget') {
-        eventBus.$emit("removeWidget", this.$el);
-      } else if (command == 'duplicate') {
-        this.$emit('duplicate', this.item)
-      }
-    },
-    removeWidget(event) {
-      eventBus.$emit("removeWidget", event.path[2]);
-    },
-    removeSection(event) {
-      eventBus.$emit("removeSection", event.path[2]);
-    },
-    shrink(event) {
-      this.collapsed = !this.collapsed;
-      eventBus.$emit("shrink", event.path[2], this.collapsed);
-
-      // console.log(event.path[3])
-      // this.collapsed = !this.collapsed
-      // this.$emit('shrink', event.path[4] )
-    },
+  beforeDestroy() {
+    this.masterGridObj.removeWidget(this.$el, true, false);
   },
-  data() {
-    return {
-      collapsed: false,
-    };
-  },
-  computed: {
-    gridContentClass() {
-      return {
-        "grid-stack-item-content": true,
-        "grid-stack-nested-item": !!this.item.section,
-      };
+  inject: {
+    masterGridObj: {
+      default: null,
     },
-
-    getComponent() {
-      return {
-        // component: this.item.component,
-        // otherData:
-        //   "... Data which has been passed as props to grid-stack-item ... ",
-        item: this.item
-      };
-    },
-    gridItemAttr() {
-      let attr = {
-        "gs-x": this.item.x,
-        "gs-y": this.item.y,
-        "gs-w": this.item.w,
-        "gs-h": this.item.h,
-        "gs-removable": true,
-        "gs-min-w": this.item.minW,
-        "gs-min-h": this.item.minH
-      };
-      if (this.item.section) {
-        attr["gs-max-w"] = 96;
-        attr["gs-min-w"] = 96;
-        attr["gs-no-resize"] = "true";
-        attr["gs-collapsed"] = this.collapsed;
-      }
-      // The id attribute is used while adding a new widget (Grid item).
-      // For more information refer gridstack's makeWidget().
-
-      return attr;
-    },
-  },
-  props: {
-    item: {
-      required: true,
-      type: Object,
+    subGridObj: {
+      default: null,
     },
   },
 };
 </script>
 
-<style lang="css" scoped>
-.grid-stack-item-content {
-  border: 1px solid black;
-}
-
-.grid-stack-placeholder {
-  border: 10px dashed red;
-}
-
-.grid-stack-nested-item {
-  background-color: rgb(203, 123, 123);
-  overflow: hidden !important;
-}
-
-.shrink-button {
-  box-sizing: border-box;
-  height: 55px;
-  display: block;
-  width: 100%;
-  background-color: red;
-}
-
-.remove-section {
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 55px;
-  box-sizing: border-box;
-  display: inline;
-}
-</style>
+<style lang="css" scoped></style>
