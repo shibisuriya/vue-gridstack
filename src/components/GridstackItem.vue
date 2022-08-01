@@ -83,9 +83,7 @@ export default {
     },
   },
   mounted() {
-    if (this.subGridObj) {
-      this.subGridObj.makeWidget(this.$el);
-    } else if (this.masterGridObj) {
+    if (this.masterGridObj) {
       this.masterGridObj.makeWidget(this.$el);
     }
   },

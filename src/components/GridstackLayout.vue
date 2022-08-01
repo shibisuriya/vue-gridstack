@@ -44,18 +44,15 @@ export default {
       type: Boolean,
       default: false,
     },
+    draggable: {
+      type: String,
+      default: 'grid-stack-item-content'
+    },
     alwaysShowResizeHandle: {
       type: Boolean,
       default: false,
     },
-    className: {
-      type: String,
-      default: "",
-    },
-    dragHandle: {
-      type: String,
-      default: ".grid-stack-item-content",
-    },
+
     float: {
       type: Boolean,
       default: false,
@@ -77,8 +74,6 @@ export default {
         resizable: this.resizable,
         staticGrid: this.static,
         alwaysShowResizeHandle: this.alwaysShowResizeHandle,
-        class: this.className,
-        handle: this.dragHandle,
         float: this.float,
         disableOneColumnMode: this.disableOneColumnMode,
         acceptWidgets: true,
@@ -114,7 +109,7 @@ export default {
         this.masterGridObj.engine.nodes[index].el,
         false,
         true
-      );
+      ); // Emit remove event and remove the item from the array.
     },
     subscribeToMasterGridEvents() {
       const self = this;
