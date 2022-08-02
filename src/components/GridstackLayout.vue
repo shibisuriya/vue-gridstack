@@ -120,12 +120,12 @@ export default {
     },
     subscribeToMasterGridEvents() {
       const self = this;
-      this.grid.on("removed", (event, items) => {
-        items.forEach((i) => {
-          self.eventBus.$emit("removed", i.id);
-        });
-      });
-      this.grid.on("added change", (event, items) => {
+      // this.grid.on("removed", (event, items) => {
+      //   items.forEach((i) => {
+      //     self.eventBus.$emit("removed", i.id);
+      //   });
+      // });
+      this.grid.on("change", (event, items) => {
         const layout = cloneDeep(self.layout);
         items.forEach((i) => {
           const { w } = findIndicesUsingId(i.id, layout);
@@ -140,42 +140,47 @@ export default {
         self.$emit("update:layout", layout);
         self.$emit("refresh");
       });
-      // this.grid.on("change", (event, items) => {
-      //   const layout = cloneDeep(self.layout);
-      //   items.forEach((i) => {
-      //     const { w } = findIndicesUsingId(i.id, layout);
-      //     const pos = {
-      //       x: i.x,
-      //       y: i.y,
-      //       w: i.w,
-      //       h: i.h,
-      //     };
-      //     Object.assign(w, pos);
-      //   });
-      //   self.$emit("update:layout", layout);
-      //   self.$emit("refresh");
-      // });
+      this.grid.on("added", (event, items) => {
+        const layout = cloneDeep(self.layout);
+        items.forEach((i) => {
+          const { w } = findIndicesUsingId(i.id, layout);
+
+          const pos = {
+            x: i.x,
+            y: i.y,
+            w: i.w,
+            h: i.h,
+          };
+          Object.assign(w, pos);
+        });
+        self.$emit("update:layout", layout);
+        self.$emit("refresh");
+      });
     },
     subscribeToEventBusEvents() {
       const self = this;
-      this.eventBus.$on("added", ({ id, pos }) => {
-        self.initialLayout = cloneDeep(self.layout);
-        const index = self.findIndexUsingId(id);
-        Object.assign(self.initialLayout[index], pos);
-        self.$emit("update:layout", cloneDeep(self.initialLayout));
+      this.eventBus.$on("subgridUpdated", (layout) => {
+        self.$emit("update:layout", layout);
+        self.$emit("refresh");
       });
-      this.eventBus.$on("change", ({ id, pos, update = false }) => {
-        const index = self.findIndexUsingId(id);
-        Object.assign(self.initialLayout[index], pos);
-        if (update == true) {
-          self.$emit("update:layout", cloneDeep(self.initialLayout));
-        }
-      });
-      this.eventBus.$on("removed", (id) => {
-        const index = self.findIndexUsingId(id);
-        self.initialLayout.splice(index, 1);
-        self.$emit("update:layout", cloneDeep(self.initialLayout));
-      });
+      // this.eventBus.$on("added", ({ id, pos }) => {
+      //   self.initialLayout = cloneDeep(self.layout);
+      //   const index = self.findIndexUsingId(id);
+      //   Object.assign(self.initialLayout[index], pos);
+      //   self.$emit("update:layout", cloneDeep(self.initialLayout));
+      // });
+      // this.eventBus.$on("change", ({ id, pos, update = false }) => {
+      //   const index = self.findIndexUsingId(id);
+      //   Object.assign(self.initialLayout[index], pos);
+      //   if (update == true) {
+      //     self.$emit("update:layout", cloneDeep(self.initialLayout));
+      //   }
+      // });
+      // this.eventBus.$on("removed", (id) => {
+      //   const index = self.findIndexUsingId(id);
+      //   self.initialLayout.splice(index, 1);
+      //   self.$emit("update:layout", cloneDeep(self.initialLayout));
+      // });
     },
   },
 };

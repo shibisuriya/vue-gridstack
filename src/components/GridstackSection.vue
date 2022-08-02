@@ -7,6 +7,8 @@
 <script>
 import GridStack from "/node_modules/gridstack/dist/gridstack-h5.js";
 import cloneDeep from "lodash/cloneDeep";
+import { findIndicesUsingId } from "../lib/util";
+
 export default {
   data() {
     return {
@@ -18,7 +20,7 @@ export default {
       subGridLayout: this,
     };
   },
-  inject: ["masterGridOption", "eventBus"],
+  inject: ["masterGridOption", "eventBus", "masterLayout"],
   created() {
     const self = this;
     this.$nextTick(() => {
@@ -34,20 +36,44 @@ export default {
         },
       });
       self.grid = GridStack.addGrid(self.$el, subgridOptions);
+      self.subsribeToSubGridEvents();
+      this.$nextTick(() => {
+        self.grid.float(self.masterLayout.float);
+      });
     });
   },
   methods: {
     subsribeToSubGridEvents() {
       const self = this;
       this.grid.on("change", (event, items) => {
+        const layout = cloneDeep(self.masterLayout.layout);
         items.forEach((i) => {
-          self.eventBus.$emit("change", i.id);
+          const { w } = findIndicesUsingId(i.id, layout);
+          const pos = {
+            x: i.x,
+            y: i.y,
+            w: i.w,
+            h: i.h,
+          };
+          Object.assign(w, pos);
         });
+        self.eventBus.$emit("subgridUpdated", layout);
       });
       this.grid.on("added", (event, items) => {
+        const layout = cloneDeep(self.masterLayout.layout);
         items.forEach((i) => {
-          self.eventBus.$emit("added", i.id);
+          const { w } = findIndicesUsingId(i.id, layout);
+
+          const pos = {
+            x: i.x,
+            y: i.y,
+            w: i.w,
+            h: i.h,
+          };
+          Object.assign(w, pos);
         });
+        self.eventBus.$emit("subgridUpdated", layout);
+        // self.$emit("refresh");
       });
     },
   },

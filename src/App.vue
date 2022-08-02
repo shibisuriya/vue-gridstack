@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div>
+    <!-- <div>
       {{ saveData }}
-    </div>
+    </div> -->
     <div>
       <button @click="addComponent">Add component</button>
       <button @click="addSection">Add section</button>
@@ -45,7 +45,7 @@
               >
                 <CardComponent
                   @remove="removeWidget(child.id)"
-                  :id="item.id"
+                  :id="child.id"
                 ></CardComponent>
               </gridstack-item>
             </gridstack-section>
@@ -73,9 +73,20 @@ export default {
     return {
       uid: -1,
       layout: [
-       
+        // {
+        //   id: "-1",
+        //   x: 0,
+        //   y: 0,
+        //   w: 96,
+        //   h: 31,
+        //   children: [
+        //     { id: "-2", x: 50, y: 5, w: 2, h: 12 },
+        //     { id: "-4", x: 12, y: 0, w: 40, h: 5 },
+        //     { id: "-3", x: 12, y: 0, w: 40, h: 5 },
+
+        //   ],
+        // },
       ],
-      saveData: null,
     };
   },
   components: {
@@ -92,9 +103,9 @@ export default {
     saveInCookie() {
       localStorage.setItem("data", JSON.stringify(this.layout));
     },
-    save() {
-      this.saveData = this.$refs["gridstackLayout"].save();
-    },
+    // save() {
+    //   this.saveData = this.$refs["gridstackLayout"].save();
+    // },
     get_uid() {
       return String(this.uid--);
     },

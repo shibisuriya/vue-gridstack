@@ -111,11 +111,14 @@ export default {
   },
   created() {},
   mounted() {
-    if (this.subGridLayout?.grid) {
-      this.subGridLayout.grid.makeWidget(this.$el);
-    } else if (this.masterLayout?.grid) {
-      this.masterLayout.grid.makeWidget(this.$el);
-    }
+    const self = this;
+    this.$nextTick(() => {
+      if (self.subGridLayout?.grid) {
+        self.subGridLayout.grid.makeWidget(self.$el);
+      } else if (self.masterLayout?.grid) {
+        self.masterLayout.grid.makeWidget(self.$el);
+      }
+    });
   },
   beforeDestroy() {
     if (this.subGridLayout.grid) {
