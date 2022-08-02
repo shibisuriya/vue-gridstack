@@ -125,10 +125,7 @@ export default {
           self.eventBus.$emit("removed", i.id);
         });
       });
-      this.grid.on("dropped", (event, items) => {
-        console.log(items);
-      });
-      this.grid.on("added", (event, items) => {
+      this.grid.on("added change", (event, items) => {
         const layout = cloneDeep(self.layout);
         items.forEach((i) => {
           const { w } = findIndicesUsingId(i.id, layout);
@@ -143,22 +140,21 @@ export default {
         self.$emit("update:layout", layout);
         self.$emit("refresh");
       });
-      this.grid.on("change", (event, items) => {
-        const layout = cloneDeep(self.layout);
-        items.forEach((i) => {
-          const { w } = findIndicesUsingId(i.id, layout);
-
-          const pos = {
-            x: i.x,
-            y: i.y,
-            w: i.w,
-            h: i.h,
-          };
-          Object.assign(w, pos);
-        });
-        self.$emit("update:layout", layout);
-        self.$emit("refresh");
-      });
+      // this.grid.on("change", (event, items) => {
+      //   const layout = cloneDeep(self.layout);
+      //   items.forEach((i) => {
+      //     const { w } = findIndicesUsingId(i.id, layout);
+      //     const pos = {
+      //       x: i.x,
+      //       y: i.y,
+      //       w: i.w,
+      //       h: i.h,
+      //     };
+      //     Object.assign(w, pos);
+      //   });
+      //   self.$emit("update:layout", layout);
+      //   self.$emit("refresh");
+      // });
     },
     subscribeToEventBusEvents() {
       const self = this;

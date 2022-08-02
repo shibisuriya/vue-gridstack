@@ -73,9 +73,7 @@ export default {
     return {
       uid: -1,
       layout: [
-        { id: "-1", x: 43, y: 20, w: 4, h: 9, data: {} },
-        { id: "-2", x: 42, y: 10, w: 39, h: 10, data: {} },
-        { id: "-3", x: 12, y: 0, w: 39, h: 10, data: {} },
+       
       ],
       saveData: null,
     };
@@ -89,7 +87,7 @@ export default {
   },
   methods: {
     refresh() {
-      // this.saveInCookie();
+      this.saveInCookie();
     },
     saveInCookie() {
       localStorage.setItem("data", JSON.stringify(this.layout));
@@ -136,7 +134,7 @@ export default {
     },
   },
   mounted() {
-    // this.layout = JSON.parse(localStorage.getItem("data")) || [];
+    this.layout = JSON.parse(localStorage.getItem("data")) || [];
   },
 };
 </script>
