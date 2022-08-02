@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>{{ id }}</h1>
+    <small>{{ id }}</small>
     <!-- <h1 style="border: 1px solid black;" class="drag-handle"> I am a drag handle</h1> -->
     <!-- <iframe
       width="560"

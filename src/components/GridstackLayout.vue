@@ -8,6 +8,7 @@
 import GridStack from "/node_modules/gridstack/dist/gridstack-h5.js";
 import Vue from "vue";
 import cloneDeep from "lodash/cloneDeep";
+import { findIndicesUsingId } from "../lib/util";
 export default {
   props: {
     column: {
@@ -59,8 +60,14 @@ export default {
     },
   },
   save() {},
+  computed: {
+    getFloat() {
+      return this.loaded ? this.float : true;
+    },
+  },
   data() {
     return {
+      loaded: false,
       masterGridOption: {
         column: this.column,
         cellHeight: this.rowHeight,
@@ -69,8 +76,8 @@ export default {
         minRow: this.minRows,
         resizable: this.resizable,
         staticGrid: this.static,
+        float: true,
         alwaysShowResizeHandle: this.alwaysShowResizeHandle,
-        float: this.float,
         disableOneColumnMode: this.disableOneColumnMode,
         acceptWidgets: true,
       },
@@ -92,6 +99,11 @@ export default {
     this.$nextTick(() => {
       self.initialLayout = cloneDeep(self.layout);
       self.grid = GridStack.init(self.masterGridOption);
+      self.subscribeToMasterGridEvents();
+      self.subscribeToEventBusEvents();
+      this.$nextTick(() => {
+        self.grid.float(self.float);
+      });
     });
   },
   methods: {
@@ -113,34 +125,39 @@ export default {
           self.eventBus.$emit("removed", i.id);
         });
       });
+      this.grid.on("dropped", (event, items) => {
+        console.log(items);
+      });
       this.grid.on("added", (event, items) => {
+        const layout = cloneDeep(self.layout);
         items.forEach((i) => {
+          const { w } = findIndicesUsingId(i.id, layout);
           const pos = {
             x: i.x,
             y: i.y,
             w: i.w,
             h: i.h,
           };
-          self.eventBus.$emit("added", {
-            id: i.id,
-            pos: pos,
-          });
+          Object.assign(w, pos);
         });
+        self.$emit("update:layout", layout);
+        self.$emit("refresh");
       });
       this.grid.on("change", (event, items) => {
-        items.forEach((i, index) => {
+        const layout = cloneDeep(self.layout);
+        items.forEach((i) => {
+          const { w } = findIndicesUsingId(i.id, layout);
+
           const pos = {
             x: i.x,
             y: i.y,
             w: i.w,
             h: i.h,
           };
-          self.eventBus.$emit("change", {
-            id: i.id,
-            pos: pos,
-            update: items.length == index + 1,
-          });
+          Object.assign(w, pos);
         });
+        self.$emit("update:layout", layout);
+        self.$emit("refresh");
       });
     },
     subscribeToEventBusEvents() {
@@ -151,17 +168,17 @@ export default {
         Object.assign(self.initialLayout[index], pos);
         self.$emit("update:layout", cloneDeep(self.initialLayout));
       });
-      this.eventBus.$on("removed", (id) => {
-        const index = self.findIndexUsingId(id);
-        self.initialLayout.splice(index, 1);
-        self.$emit("update:layout", cloneDeep(self.initialLayout));
-      });
       this.eventBus.$on("change", ({ id, pos, update = false }) => {
         const index = self.findIndexUsingId(id);
         Object.assign(self.initialLayout[index], pos);
         if (update == true) {
           self.$emit("update:layout", cloneDeep(self.initialLayout));
         }
+      });
+      this.eventBus.$on("removed", (id) => {
+        const index = self.findIndexUsingId(id);
+        self.initialLayout.splice(index, 1);
+        self.$emit("update:layout", cloneDeep(self.initialLayout));
       });
     },
   },

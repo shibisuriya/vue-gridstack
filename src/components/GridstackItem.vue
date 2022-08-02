@@ -96,14 +96,22 @@ export default {
     };
   },
   beforeMount() {
-    this.id;
-    console.log("Created of gridstackItem");
+    // this.id;
+    // console.log("Created of gridstackItem");
+    // const self = this;
+    // this.$nextTick(() => {
+    //   self.id;
+    //   self.loaded = true;
+    //   if (self.subGridLayout?.grid) {
+    //     self.subGridLayout.grid.makeWidget(self.$el);
+    //   } else if (self.masterLayout?.grid) {
+    //     self.masterLayout.grid.makeWidget(self.$el);
+    //   }
+    // });
   },
   created() {
     const self = this;
     this.$nextTick(() => {
-      self.id;
-      self.loaded = true;
       if (self.subGridLayout?.grid) {
         self.subGridLayout.grid.makeWidget(self.$el);
       } else if (self.masterLayout?.grid) {

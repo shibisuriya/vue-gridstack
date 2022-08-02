@@ -6,19 +6,22 @@
     <div>
       <button @click="addComponent">Add component</button>
       <button @click="addSection">Add section</button>
-      <button @click="save">Save</button>
+      <!-- <button @click="save">Save</button> -->
+      <button @click="saveInCookie">SaveIncookie</button>
     </div>
     <div>
       {{ layout }}
     </div>
     <div>
       <gridstack-layout
+        @refresh="refresh"
         ref="gridstackLayout"
         :layout.sync="layout"
         :column="96"
         :rowHeight="'15px'"
         :disableOneColumnMode="true"
         :minRows="15"
+        :float="false"
       >
         <gridstack-item
           v-for="item in layout"
@@ -68,15 +71,11 @@ import SectionContainer from "./components/SectionContainer.vue";
 export default {
   data() {
     return {
+      uid: -1,
       layout: [
-        {
-          id: "-1659421911939",
-          x: 1,
-          y: 1,
-          w: 96,
-          h: 10,
-          children: [{ id: "-1659421911938", x: 30, y: 1, w: 40, h: 5 }],
-        },
+        { id: "-1", x: 43, y: 20, w: 4, h: 9, data: {} },
+        { id: "-2", x: 42, y: 10, w: 39, h: 10, data: {} },
+        { id: "-3", x: 12, y: 0, w: 39, h: 10, data: {} },
       ],
       saveData: null,
     };
@@ -89,8 +88,17 @@ export default {
     SectionContainer,
   },
   methods: {
+    refresh() {
+      // this.saveInCookie();
+    },
+    saveInCookie() {
+      localStorage.setItem("data", JSON.stringify(this.layout));
+    },
     save() {
       this.saveData = this.$refs["gridstackLayout"].save();
+    },
+    get_uid() {
+      return String(this.uid--);
     },
     addSection() {
       const section = {
@@ -111,12 +119,13 @@ export default {
       };
       this.layout.push(section);
     },
+
     removeWidget(widgetId) {
       this.$refs["gridstackLayout"].removeItem(widgetId);
     },
     addComponent() {
       const widget = {
-        id: Date.now() * -1 + "",
+        id: this.get_uid(),
         x: 1,
         y: 0,
         w: 39,
@@ -125,6 +134,9 @@ export default {
       };
       this.layout.push(widget);
     },
+  },
+  mounted() {
+    // this.layout = JSON.parse(localStorage.getItem("data")) || [];
   },
 };
 </script>
