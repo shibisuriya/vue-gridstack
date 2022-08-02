@@ -1,42 +1,61 @@
 <template>
-  <div class="grid-stack">
+  <div class="grid-stack grid-stack-nested">
     <slot></slot>
   </div>
 </template>
 
 <script>
-// import { eventBus } from "@/main";
 import GridStack from "/node_modules/gridstack/dist/gridstack-h5.js";
-// import cloneDeep from 'lodash/cloneDeep'
+import cloneDeep from "lodash/cloneDeep";
 export default {
   data() {
     return {
-      subGridObj: null,
+      grid: null,
     };
-  },
-  inject: ["masterGridObj", "masterGridOption", "eventBus"],
-  mounted() {
-    this.subGridObj = GridStack.addGrid(this.$el, this.masterGridOption);
-    this._provided.subGridObj = this.subGridObj;
-    this.subsribeToSubGridEvents();
   },
   provide() {
     return {
-      subGridObj: null,
+      subGridLayout: this,
     };
+  },
+  inject: ["masterGridOption", "eventBus"],
+  created() {
+    const self = this;
+    this.$nextTick(() => {
+      const subgridOptions = Object.assign(cloneDeep(self.masterGridOption), {
+        acceptWidgets: (el) => {
+          let stackElm = el.getElementsByClassName("grid-stack");
+          console.log("stackElm: ", stackElm);
+          if (stackElm && stackElm.length) {
+            return false;
+          } else {
+            return true;
+          }
+        },
+      });
+      self.grid = GridStack.addGrid(self.$el, subgridOptions);
+    });
   },
   methods: {
     subsribeToSubGridEvents() {
       const self = this;
-      this.subGridObj.on("change", (event, items) => {
+      this.grid.on("change", (event, items) => {
         items.forEach((i) => {
-          self.eventBus.$emit('change', i.id)
+          self.eventBus.$emit("change", i.id);
         });
-        console.log("section -> ", event, " -> ", items);
+      });
+      this.grid.on("added", (event, items) => {
+        items.forEach((i) => {
+          self.eventBus.$emit("added", i.id);
+        });
       });
     },
   },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.grid-stack-nested {
+  border: 1px solid blue;
+}
+</style>

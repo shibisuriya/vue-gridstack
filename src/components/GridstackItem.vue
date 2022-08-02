@@ -1,6 +1,6 @@
 <template>
   <div
-    class="grid-stack-item"
+    :class="{ 'grid-stack-item': loaded }"
     style="border: 1px solid black"
     :gs-id="id"
     :gs-x="x"
@@ -15,7 +15,7 @@
     :gs-no-move="move"
     :gs-locked="locked"
   >
-    <div class="grid-stack-item-content">
+    <div :class="{ 'grid-stack-item-content': loaded }">
       <slot></slot>
     </div>
   </div>
@@ -82,21 +82,41 @@ export default {
       default: false,
     },
   },
-  mounted() {
-    if (this.masterGridObj) {
-      this.masterGridObj.makeWidget(this.$el);
-    }
+  inject: {
+    masterLayout: {
+      default: null,
+    },
+    subGridLayout: {
+      default: null,
+    },
+  },
+  data() {
+    return {
+      loaded: false,
+    };
+  },
+  beforeMount() {
+    this.id;
+    console.log("Created of gridstackItem");
+  },
+  created() {
+    const self = this;
+    this.$nextTick(() => {
+      self.id;
+      self.loaded = true;
+      if (self.subGridLayout?.grid) {
+        self.subGridLayout.grid.makeWidget(self.$el);
+      } else if (self.masterLayout?.grid) {
+        self.masterLayout.grid.makeWidget(self.$el);
+      }
+    });
   },
   beforeDestroy() {
-    this.masterGridObj.removeWidget(this.$el, true, false);
-  },
-  inject: {
-    masterGridObj: {
-      default: null,
-    },
-    subGridObj: {
-      default: null,
-    },
+    if (this.subGridLayout.grid) {
+      this.subGridLayout.grid.removeWidget(this.$el, true, false);
+    } else if (this.masterLayout.grid) {
+      this.masterGrid.grid.removeWidget(this.$el, true, false);
+    }
   },
 };
 </script>

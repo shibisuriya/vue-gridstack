@@ -44,10 +44,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    draggable: {
-      type: String,
-      default: 'grid-stack-item-content'
-    },
     alwaysShowResizeHandle: {
       type: Boolean,
       default: false,
@@ -62,9 +58,9 @@ export default {
       default: false,
     },
   },
+  save() {},
   data() {
     return {
-      masterGridObj: null,
       masterGridOption: {
         column: this.column,
         cellHeight: this.rowHeight,
@@ -80,45 +76,44 @@ export default {
       },
       eventBus: new Vue(),
       initialLayout: null,
+      grid: null,
     };
-  },
-  mounted() {
-    this.initialLayout = cloneDeep(this.layout);
-    this.masterGridObj = GridStack.init(this.masterGridOption);
-    this._provided.masterGridObj = this.masterGridObj;
-    this.subscribeToMasterGridEvents();
-    this.subscribeToEventBusEvents();
   },
   provide() {
     return {
-      masterGridObj: null,
+      masterLayout: this,
       masterGridOption: this.masterGridOption,
       eventBus: this.eventBus,
     };
   },
+
+  created() {
+    const self = this;
+    this.$nextTick(() => {
+      self.initialLayout = cloneDeep(self.layout);
+      self.grid = GridStack.init(self.masterGridOption);
+    });
+  },
   methods: {
+    save() {
+      return this.grid.save();
+    },
     findIndexUsingId(id) {
       return this.initialLayout.findIndex((i) => i.id == id);
     },
     removeItem(id) {
       //const index = this.findIndexUsingId(id);
-      const index = this.masterGridObj.engine.nodes.findIndex(
-        (n) => n.id == id
-      );
-      this.masterGridObj.removeWidget(
-        this.masterGridObj.engine.nodes[index].el,
-        false,
-        true
-      ); // Emit remove event and remove the item from the array.
+      const index = this.grid.engine.nodes.findIndex((n) => n.id == id);
+      this.grid.removeWidget(this.grid.engine.nodes[index].el, false, true); // Emit remove event and remove the item from the array.
     },
     subscribeToMasterGridEvents() {
       const self = this;
-      this.masterGridObj.on("removed", (event, items) => {
+      this.grid.on("removed", (event, items) => {
         items.forEach((i) => {
           self.eventBus.$emit("removed", i.id);
         });
       });
-      this.masterGridObj.on("added", (event, items) => {
+      this.grid.on("added", (event, items) => {
         items.forEach((i) => {
           const pos = {
             x: i.x,
@@ -132,7 +127,7 @@ export default {
           });
         });
       });
-      this.masterGridObj.on("change", (event, items) => {
+      this.grid.on("change", (event, items) => {
         items.forEach((i, index) => {
           const pos = {
             x: i.x,
